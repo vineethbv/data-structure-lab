@@ -1,92 +1,66 @@
-#include <stdio.h>
-# define MAX 100
-char stack[MAX];
-int top=-1;
-void push(char ch)
+#include<stdio.h>
+#include<ctype.h>
+int stack[20];
+int top = -1;
+
+void push(int x)
 {
-	if(top==MAX-1)
-		printf("stack is full\n");
-	else
-	{
-		top++;
-		stack[top]=ch;
-	}	
+    stack[++top] = x;
 }
-char pop()
+
+int pop()
 {
-	char item;
-	if(top==-1)
-		printf("\n stack is empty !");
-	else
-	{
-		item=stack[top];
-		top--;
-		return item;
-	}	
+    return stack[top--];
 }
-int stackempty()
+
+int main()
 {
-	if(top==-1) return 1;
-	else return 0;
-}
-char stacktop()
-{
-	if(top==-1)
-		printf("\n stack is empty !");
-	else
-		return stack[top];
-}
-int priority(char ch)
-{
-	switch(ch)
-	{
-		case'+':
-		case'-':return(1);
-		case'*':
-		case'/':return(2);
-		default:return(0);
-	}
-}
-int main(int argc,char argv)
-{
-	char infix[100];
-	int i,item;
-	printf("enter the infix expression :");
-	scanf("%s",infix);
-	printf("expression :%s",infix);
-	printf("\n postfix: ");
-	i=0;
-	while(infix[i]!='\0')
-	{
-		switch(infix[i])
-		{
-			case'(':push(infix[i]);break;
-			case')':while((item=pop())!='(')
-			        printf("%c",item);
-			        break;
-			case'+':
-			case'-':
-			case'*':
-			case'/':
-			        while(!stackempty() && priority(infix[i])<=priority(stacktop()))
-			        {
-			        	item=pop();
-			        	printf("%c",item);
-			        }
-			        push(infix[i]);
-			        break;
-			default:printf("%c",infix[i]);
-			        break;	
-		}
-		i++;
-	}
-    while(!stackempty())
+    char exp[20];
+    
+    int n1,n2,n3,num;
+    printf("Enter the Postfix expression :: ");
+    scanf("%s",exp);
+    int i=0;
+    while(exp[i]!= '\0')
     {
-    	char item;
-    	item=top();
-    	printf("%c",item);
+        if(isdigit(exp[i]))
+        {
+            num = exp[i] - 48;
+            push(num);
+        }
+        else
+        {
+            n2 = pop();
+            n1 = pop();
+            switch(exp[i])
+            {
+            case '+':
+            {
+                n3 = n1 + n2;
+                break;
+            }
+            case '-':
+            {
+                n3 = n1 - n2;
+                break;
+            }
+            case '*':
+            {
+                n3 = n1 * n2;
+                break;
+            }
+            case '/':
+            {
+                n3 = n1 / n2;
+                break;
+            }
+            }
+            push(n3);
+        }
+        i++;
     }
-    printf("\n");
+    printf("\nThe result of expression %s  =  %d\n\n",exp,pop());
     return 0;
-}    	
+}
+   	
 
